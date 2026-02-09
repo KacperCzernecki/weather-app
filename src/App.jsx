@@ -4,7 +4,7 @@ import "./App.css";
 
 function App() {
   const [cityInput, setCityInput] = useState("");
-  const [city, setCity] = useState("Warszawa");
+  const [city, setCity] = useState("");
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -14,6 +14,10 @@ function App() {
     if (!apiKey) {
       setLoading(false);
       setError(new Error("Missing API key"));
+      return;
+    }
+    if (!city) {
+      setLoading(false);
       return;
     }
     const fetchData = async () => {
@@ -42,19 +46,47 @@ function App() {
 
   if (loading) return <div>Loading...</div>;
   if (error) return <div>Error: {error.message}</div>;
-  if (!data) return null;
   return (
     <div className="container">
+      <h1>Weather app</h1>
       <input
+        className="weatherInput"
         type="text"
         value={cityInput}
         placeholder="Enter a City"
         onChange={(e) => setCityInput(e.target.value)}
       />
       <button onClick={handleClick}>Search</button>
-      <h2>Weather in {city}</h2>
-      <p>Temperature: {data.currentConditions.temp}°C</p>
-      <p>Humidity: {data.currentConditions.humidity}%</p>
+      {data && (
+        <div className="weather-info">
+          <h1>
+            {city}
+            <img
+              src={`src/assets/${data.currentConditions.icon}.svg`}
+              alt={data.currentConditions.icon}
+            />
+          </h1>
+          <p>
+            <b>☁️Conditions: {data.currentConditions.conditions}</b>
+          </p>
+          <p>
+            <b>🌡️Temperature: {data.currentConditions.temp}°C</b> (Feels like:{" "}
+            {data.currentConditions.feelslike}°C)
+          </p>
+          <p>
+            <b>💧Humidity: {data.currentConditions.humidity}%</b>
+          </p>
+          <p>
+            <b>💨Wind speed: {data.currentConditions.windspeed} m/s</b>
+          </p>
+          <p>
+            <b>👀Visibility: {data.currentConditions.visibility} km</b>
+          </p>
+          <p>
+            <b>⚖️Pressure: {data.currentConditions.pressure} hPa</b>
+          </p>
+        </div>
+      )}
     </div>
   );
 }
