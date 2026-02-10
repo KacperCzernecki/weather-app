@@ -1,51 +1,28 @@
-import { useState, useEffect } from "react";
-import axios from "axios";
+import { useState } from "react";
+import { useWeather } from "./hooks/useWeather";
+import { useCitySearch } from "./hooks/useCitySearch";
 import "./App.css";
 
 function App() {
   const [cityInput, setCityInput] = useState("");
   const [city, setCity] = useState("");
-  const [data, setData] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
-  const apiKey = import.meta.env.VITE_API_KEY;
 
-  useEffect(() => {
-    if (!apiKey) {
-      setLoading(false);
-      setError(new Error("Missing API key"));
-      return;
-    }
-    if (!city) {
-      setLoading(false);
-      return;
-    }
-    const fetchData = async () => {
-      setData(null);
-      setError(null);
-      setLoading(true);
-      try {
-        const res = await axios.get(
-          `https://weather.visualcrossing.com/VisualCrossingWebServices/rest/services/timeline/${encodeURIComponent(city)}?unitGroup=metric&key=${apiKey}`,
-        );
-        setData(res.data);
-      } catch (err) {
-        setError(err);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchData();
-  }, [city, apiKey]);
+  const { weatherData, weatherLoading, weatherError } = useWeather(city);
+  const { results } = useCitySearch(cityInput);
 
   const handleClick = () => {
     if (!cityInput.trim()) return;
     setCity(cityInput);
   };
+  const handleEnter = (e) => {
+    if (!cityInput.trim()) return;
+    if (e.key === "Enter") {
+      setCity(cityInput);
+    }
+  };
 
-  if (loading) return <div>Loading...</div>;
-  if (error) return <div>Error: {error.message}</div>;
+  if (weatherLoading) return <div>Loading...</div>;
+  if (weatherError) return <div>Error: {weatherError.message}</div>;
   return (
     <div className="container">
       <h1>Weather app</h1>
@@ -55,35 +32,45 @@ function App() {
         value={cityInput}
         placeholder="Enter a City"
         onChange={(e) => setCityInput(e.target.value)}
+        onKeyDown={handleEnter}
       />
       <button onClick={handleClick}>Search</button>
-      {data && (
+      {results.length > 0 && (
+        <ul className="suggestions">
+          {results.map((city) => (
+            <li key={city.id} onClick={() => setCity(city.name)}>
+              {city.name}, {city.country_code}
+            </li>
+          ))}
+        </ul>
+      )}
+      {weatherData && (
         <div className="weather-info">
           <h1>
             {city}
             <img
-              src={`src/assets/${data.currentConditions.icon}.svg`}
-              alt={data.currentConditions.icon}
+              src={`src/assets/${weatherData.currentConditions.icon}.svg`}
+              alt={weatherData.currentConditions.icon}
             />
           </h1>
           <p>
-            <b>☁️Conditions: {data.currentConditions.conditions}</b>
+            <b>☁️Conditions: {weatherData.currentConditions.conditions}</b>
           </p>
           <p>
-            <b>🌡️Temperature: {data.currentConditions.temp}°C</b> (Feels like:{" "}
-            {data.currentConditions.feelslike}°C)
+            <b>🌡️Temperature: {weatherData.currentConditions.temp}°C</b> (Feels
+            like: {weatherData.currentConditions.feelslike}°C)
           </p>
           <p>
-            <b>💧Humidity: {data.currentConditions.humidity}%</b>
+            <b>💧Humidity: {weatherData.currentConditions.humidity}%</b>
           </p>
           <p>
-            <b>💨Wind speed: {data.currentConditions.windspeed} m/s</b>
+            <b>💨Wind speed: {weatherData.currentConditions.windspeed} m/s</b>
           </p>
           <p>
-            <b>👀Visibility: {data.currentConditions.visibility} km</b>
+            <b>👀Visibility: {weatherData.currentConditions.visibility} km</b>
           </p>
           <p>
-            <b>⚖️Pressure: {data.currentConditions.pressure} hPa</b>
+            <b>⚖️Pressure: {weatherData.currentConditions.pressure} hPa</b>
           </p>
         </div>
       )}
