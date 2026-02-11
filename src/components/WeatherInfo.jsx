@@ -31,19 +31,19 @@ function WeatherInfo({ city }) {
     if (temperature !== undefined && humidity !== undefined) {
       if (temperature < 0 && humidity > 80) {
         tooltips.push(
-          "Bardzo zimno i wilgotno – ubierz się ciepło, rękawice i czapka obowiązkowe, uważaj na śliskie chodniki.",
+          "Very cold and damp – dress warmly, gloves and a hat are essential, and be careful on slippery sidewalks.",
         );
       } else if (temperature < 10 && humidity > 80) {
         tooltips.push(
-          "Zimno i wilgotno – lekka kurtka, warstwowa odzież i ostrożność na zewnątrz.",
+          "Cold and damp – a light jacket, layered clothing, and caution outdoors.",
         );
       } else if (temperature >= 25 && humidity > 80) {
         tooltips.push(
-          "Gorąco i wilgotno – pij dużo wody i unikaj przegrzania.",
+          "Hot and humid – drink plenty of water and avoid overheating.",
         );
       } else {
         tooltips.push(
-          `Aktualnie ${temperature}°C i wilgotność ${humidity}% – dostosuj ubranie do komfortu.`,
+          `Currently ${temperature}°C and humidity ${humidity}% – adjust your clothing for comfort.`,
         );
       }
     }
@@ -51,35 +51,31 @@ function WeatherInfo({ city }) {
     if (temperature !== undefined && windspeed !== undefined) {
       if (windspeed > 30 && temperature < 10) {
         tooltips.push(
-          "Silny wiatr i niska temperatura – ubierz się bardzo ciepło i uważaj na podmuchy.",
+          "Strong winds and low temperatures – dress very warmly and watch out for gusts.",
         );
       } else if (windspeed > 30 && temperature >= 25) {
         tooltips.push(
-          "Silny wiatr w gorący dzień – możliwe uczucie chłodu lub przeszkoda w spacerze.",
+          "Strong wind on a hot day – possible feeling of cold or hindrance to walking.",
         );
       } else if (windspeed >= 10) {
         tooltips.push(
-          `Wiatr ${windspeed} km/h – może przeszkadzać podczas spaceru lub jazdy rowerem.`,
+          `Wind ${windspeed} km/h – may be a nuisance when walking or cycling.`,
         );
       }
     }
 
     if (visibility !== undefined) {
       if (visibility < 1) {
-        tooltips.push(
-          "Widoczność bardzo ograniczona – zachowaj ostrożność podczas jazdy.",
-        );
+        tooltips.push("Visibility is very limited – please drive carefully.");
       } else if (visibility < 5) {
-        tooltips.push("Widoczność ograniczona – bądź uważny.");
+        tooltips.push("Visibility is limited – be careful.");
       }
     }
     if (pressure !== undefined) {
       if (pressure < 1000) {
-        tooltips.push(
-          "Słabe ciśnienie – możliwe niskie samopoczucie lub bóle głowy.",
-        );
+        tooltips.push("Low blood pressure – possible low mood or headaches.");
       } else if (pressure > 1020) {
-        tooltips.push("Wysokie ciśnienie – pogoda stabilna i słoneczna.");
+        tooltips.push("High pressure – stable and sunny weather.");
       }
     }
 
