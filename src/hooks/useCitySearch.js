@@ -14,7 +14,10 @@ export function useCitySearch(query) {
         const res = await axios.get(
           `https://geocoding-api.open-meteo.com/v1/search?name=${encodeURIComponent(query)}&count=3`,
         );
-        setResults(res.data.results || []);
+        const filtered = res?.data?.results?.filter((city) =>
+          city.feature_code.includes("PPL"),
+        );
+        setResults(filtered || []);
       } catch (err) {
         console.log(err);
       }
