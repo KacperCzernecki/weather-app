@@ -5,8 +5,17 @@
   gap: 10px;
 }
 input {
+  display: flex;
+  align-self: center;
+  width: 500px;
   text-align: center;
   margin-bottom: 10px;
+}
+button {
+  display: flex;
+  width: 508px;
+  align-self: center;
+  justify-content: center;
 }
 p {
   display: flex;

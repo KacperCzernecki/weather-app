@@ -1,6 +1,7 @@
 import React from "react";
 import { useWeather } from "../hooks/useWeather";
 import { useState, useEffect } from "react";
+import WeatherSkeleton from "./WeatherSkeleton";
 import "./WeatherInfo.css";
 
 function WeatherInfo({ city }) {
@@ -11,11 +12,12 @@ function WeatherInfo({ city }) {
     setCurrentCity(city);
   }, [city]);
 
-  if (weatherLoading) return <div>Loading...</div>;
+  if (weatherLoading) return <WeatherSkeleton />;
   if (weatherError) return <div>Error: {weatherError.message}</div>;
   if (!weatherData) return null;
 
   const { currentConditions } = weatherData;
+  const todayDisplay = `${weatherData.days[0].datetime.split("-")[2]}.${weatherData.days[0].datetime.split("-")[1]}.${weatherData.days[0].datetime.split("-")[0]}`;
 
   const getToolTip = (conditions) => {
     const {
@@ -91,6 +93,9 @@ function WeatherInfo({ city }) {
             alt={currentConditions.icon}
           />
         </h1>
+        <p>
+          <p>{todayDisplay}</p>
+        </p>
         <p>
           <b>☁️Conditions: {currentConditions.conditions}</b>
           <span className="info-wrapper">
